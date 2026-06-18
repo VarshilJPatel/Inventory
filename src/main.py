@@ -5,9 +5,9 @@ from src.core.database import Base, engine
 from src.models.product import Product
 from src.models.customer import Customer
 from src.models.order import Order
-from src.models.order_item import OrderItem
 from src.api.v1.products import router as product_router
 from src.api.v1.customers import router as customer_router
+from src.api.v1.orders import router as order_router
 from src.core.exceptions import http_exception_handler
 
 @asynccontextmanager
@@ -34,6 +34,11 @@ app.include_router(
 
 app.include_router(
     customer_router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    order_router,
     prefix="/api/v1"
 )
 
