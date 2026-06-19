@@ -1,9 +1,9 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import desc
 from src.models.order import Order
 from src.models.customer import Customer
 from src.models.product import Product
 from src.schemas.order import OrderCreate, OrderUpdate
-
 
 class OrderRepository:
     @staticmethod
@@ -37,13 +37,18 @@ class OrderRepository:
         db.add(order)
         db.commit()
         db.refresh(order)
-        return order
+        return (
+            db.query(Order)
+            .options(joinedload(Order.customer), joinedload(Order.product))  # ← eager load
+            .filter(Order.id == order.id)
+            .first()
+        )
 
     @staticmethod
     def list(
         db: Session,
     ) -> list[Order]:
-        return db.query(Order).all()
+        return db.query(Order).options(joinedload(Order.customer), joinedload(Order.product)).order_by(desc(Order.created_at)).all()
 
     @staticmethod
     def get(
@@ -51,7 +56,8 @@ class OrderRepository:
         order_id: int
     ) -> Order | None:
         order = (
-            db.query(Order)
+             db.query(Order)
+            .options(joinedload(Order.customer), joinedload(Order.product))  # ← eager load
             .filter(Order.id == order_id)
             .first()
         )
@@ -92,4 +98,9 @@ class OrderRepository:
         order.status = order_data.status
         db.commit()
         db.refresh(order)
-        return order
+        return (
+            db.query(Order)
+            .options(joinedload(Order.customer), joinedload(Order.product))  # ← eager load
+            .filter(Order.id == order_id)
+            .first()
+        )

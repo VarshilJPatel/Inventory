@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from src.models.customer import Customer
 from src.schemas.customer import (
     CustomerCreate,
@@ -29,7 +30,7 @@ class CustomerRepository:
     def list(
         db: Session,
     ) -> list[Customer]:
-        return db.query(Customer).all()
+        return db.query(Customer).order_by(desc(Customer.created_at)).all()
 
     @staticmethod
     def get(

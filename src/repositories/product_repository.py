@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from src.utils.generate_sku_id import generate_sku_id
 from src.models.product import Product
 from src.schemas.product import ProductCreate, ProductUpdate
@@ -29,7 +30,7 @@ class ProductRepository:
     def list(
         db: Session,
     ) -> list[Product]:
-        return db.query(Product).all()
+        return db.query(Product).order_by(desc(Product.created_at)).all()
 
     @staticmethod
     def get(

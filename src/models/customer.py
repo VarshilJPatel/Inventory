@@ -12,7 +12,7 @@ class Customer(Base):
     full_name = Column(String(200), nullable=False)
 
     email = Column(String(255), unique=True, nullable=False)
-    phone = Column(String(20))
+    phone = Column(String(20), nullable=False)
 
     address = Column(String(500))
 

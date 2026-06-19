@@ -3,6 +3,22 @@ from decimal import Decimal
 from pydantic import BaseModel, Field
 
 
+class CustomerResponse(BaseModel):
+    id: int
+    full_name: str
+    email: str
+
+    model_config = {"from_attributes": True}
+
+
+class ProductResponse(BaseModel):
+    id: int
+    name: str
+    price: Decimal
+
+    model_config = {"from_attributes": True}
+
+
 class OrderCreate(BaseModel):
     customer_id: int
     product_id: int
@@ -24,7 +40,7 @@ class OrderResponse(BaseModel):
     status: str
     created_at: datetime
     updated_at: datetime | None = None
+    customer: CustomerResponse     
+    product: ProductResponse      
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = {"from_attributes": True}
