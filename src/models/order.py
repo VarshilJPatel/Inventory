@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Numeric, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import func
 from src.core.database import Base
 
@@ -19,8 +19,8 @@ class Order(Base):
         onupdate=func.now(),
     )
 
-    customer = relationship("Customer", backref="orders")
-    product = relationship("Product", backref="orders")
+    customer = relationship("Customer", backref=backref("orders", cascade="all, delete-orphan"))
+    product = relationship("Product", backref=backref("orders", cascade="all, delete-orphan"))
 
     @property
     def total_amount(self):
